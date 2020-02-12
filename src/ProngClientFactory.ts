@@ -9,7 +9,7 @@ import {ProngConfigClient, ProngProxyClient, ProngResourceClient} from "./lib/cl
  * @param config
  * @param type
  */
-export default function createClient(
+export function createClient(
     config:{url: string, credentials: Required<CodeCredentials>},
     type: ProngClientType = ProngClientType.RESOURCE): Clients {
     switch (type) {
