@@ -11,6 +11,16 @@
   "engines": {
     "node": ">=8.9"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cpars-innovation/prong-client"
+  },
+  "bugs": {
+    "url": "https://github.com/cpars-innovation/prong-client/issues"
+  },
+  "homepage":"https://github.com/cpars-innovation/prong-client#readme"  ,
+  "keywords": ["Prong", "Prong Client"],
+  "license": "ISC",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
@@ -31,6 +41,5 @@
     "jwt-decode": "^2.2.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8"
-
   }
 }
