@@ -25,7 +25,7 @@ export  class BaseClient {
     }
 
 
-    protected async createOptions(httpMethod: HttpMethods, options: RandomObject = {headers: {}}, body: RandomObject = {}) {
+    protected async createOptions(httpMethod: HttpMethods, options: RandomObject = {headers: {}}, body?: RandomObject) {
         return {
             ...{
                 agentOptions: {
