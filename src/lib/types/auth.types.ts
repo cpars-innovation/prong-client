@@ -44,3 +44,9 @@ export type JWTCode = {
   iss: string;
   sub: string;
 };
+
+export enum AuthEndpoints {
+  LOGIN_ENDPOINT   = '/auth-api/v1/auth/login',
+  TOKEN_ENDPOINT   = '/auth-api/v1/auth/token',
+  REFRESH_ENDPOINT = '/auth-api/v1/auth/token-refresh'
+}

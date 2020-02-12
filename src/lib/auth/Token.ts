@@ -1,5 +1,5 @@
 import JwtDecode from 'jwt-decode';
-import {JWTAccess, JWTCode, RandomObject} from '../types';
+import {JWTAccess, JWTCode} from '../types';
 
 /**
  * @class Token
@@ -26,10 +26,10 @@ export class Token {
   /**************************/
 
   public isCodeExpired() {
-    return this._isExpired(this._decodedCode);
+    return this._isExpired(this._decodedCode.exp);
   }
   public isAccessTokenExpired() {
-    return this._isExpired(this._decodedAccessToken);
+    return this._isExpired(this._decodedAccessToken.exp);
   }
 
   /****************************/
@@ -40,9 +40,9 @@ export class Token {
    * Checks if Token is expired.
    * @param token - A jwt compliant object.
    */
-  private _isExpired(token: RandomObject) {
+  private _isExpired(expiryDate: number| undefined) {
     const currentTime = new Date().getTime() / 1000;
-    return token.exp < currentTime;
+    return !expiryDate || expiryDate < currentTime;
   }
 
   /*********************/

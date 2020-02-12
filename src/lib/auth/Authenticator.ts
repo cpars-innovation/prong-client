@@ -1,8 +1,8 @@
 import {AuthenticationError, AuthenticatorError} from '../constants/ErrorMessages';
-import {AccessTokenResponse, CodeCredentials} from '../types';
+import {AccessTokenResponse, AuthEndpoints, CodeCredentials} from '../types';
 import {createError, isValidUrl} from '../utils';
 import {Token} from './Token';
-import requestPromise = require('request-promise-native');
+import requestPromise = require("request-promise-native");
 
 export interface IAuthenticator {
     getAccessToken(forceRenew?: boolean): Promise<string>;
@@ -16,12 +16,10 @@ export interface IAuthenticator {
 export class Authenticator implements IAuthenticator {
     private _token: Token | undefined;
     private _credentials: CodeCredentials;
-    private _url: string;
-    private readonly _loginEndpoint = '/auth-api/v1/auth/login';
-    private readonly _tokenEndpoint = '/auth-api/v1/auth/token';
-    private readonly _refreshEndpoint = '/auth-api/v1/auth/token-refresh';
-    private _options = {
+    private readonly _url: string;
+    private readonly _options = {
         body: {},
+        strictSSL: false,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -34,9 +32,9 @@ export class Authenticator implements IAuthenticator {
     constructor(url: string, credentials: Required<CodeCredentials>) {
         if (credentials && credentials.client_id && credentials.username && credentials.client_secret && credentials.password && url && isValidUrl(url)) {
             this._credentials = credentials;
-            this._url = url.substr(url.length - 1) === '/' ? url.substring(0, url.length - 1) : url;
+            this._url = url.endsWith('/') ? url.slice(0, -1) : url;
         } else {
-            throw createError(AuthenticationError.MISSING_CREDENTIALS,401);
+            throw createError(AuthenticationError.MISSING_CREDENTIALS, 401);
         }
     }
 
@@ -50,15 +48,13 @@ export class Authenticator implements IAuthenticator {
      */
     public async getAccessToken(forceRenew?: boolean): Promise<string> {
         if (!this._token || forceRenew) {
-            const token = await this._getNewCode();
-            await this._getNewAccessToken(token);
-            return this._createBearerToken(token);
+            this._token = await this._getNewCode();
+            await this._getNewAccessToken(this._token);
         }
         if (this._token.isAccessTokenExpired()) {
-            const accessToken = await this._refreshAccessToken(this._token);
-            return this._createBearerToken(this._token);
+            await this._refreshAccessToken(this._token);
         }
-        return this._createBearerToken(this._token);
+        return Authenticator._createBearerToken(this._token);
     }
 
     /****************************/
@@ -72,56 +68,53 @@ export class Authenticator implements IAuthenticator {
      * @returns {Promise.<*>}
      * @private
      */
-
-    private async _createBearerToken(token: Token) {
+    private static _createBearerToken(token: Token) {
         return 'Bearer ' + token.accessToken;
     }
 
+    /**
+     * refresh access token using refresh token
+     * @param token token object containing refresh token
+     * @private
+     */
     private async _refreshAccessToken(token: Token) {
-        this._options.body = {refreshToken: token.refreshToken};
+        const options = {...this._options, body: {refreshToken: token.refreshToken}};
         try {
-            const result = await requestPromise.post(this._url + this._refreshEndpoint, this._options);
+            const result = await requestPromise.post(this._url + AuthEndpoints.REFRESH_ENDPOINT, options);
             token.accessToken = result.accessToken;
             token.refreshToken = result.refreshToken;
             return token;
         } catch (e) {
-            token = await this._getNewCode();
-            await this._getNewAccessToken(token);
-            return token;
+            this._token = await this._getNewCode();
+            await this._getNewAccessToken(this._token);
         }
     }
 
     private async _getNewCode() {
-        this._options.body = {
-            client_id: this._credentials.client_id,
-            client_secret: this._credentials.client_secret,
-            username: this._credentials.username,
-            password: this._credentials.password,
-        };
+        const options = {...this._options, body: this._credentials};
         try {
-            const result = await requestPromise.post(this._url + this._loginEndpoint, this._options);
-            if (!this._token) {
-              this._token = new Token(result.code);
-            }
-          this._token.code = result.code;
-          return this._token;
+            const result = await requestPromise.post(this._url + AuthEndpoints.LOGIN_ENDPOINT, options);
+            if (!this._token) this._token = new Token(result.code);
+            return this._token;
         } catch (e) {
-            throw createError(AuthenticatorError.CODE_ERROR,400)
+            throw createError(AuthenticatorError.CODE_ERROR, 400)
         }
     }
 
     private async _getNewAccessToken(token: Token) {
-        this._options.body = {
-            clientId: this._credentials.client_id,
-            username: this._credentials.username,
-            code: token.code,
+        const options = {
+            ...this._options, body: {
+                clientId: this._credentials.client_id,
+                username: this._credentials.username,
+                code: token.code,
+            }
         };
-        try{
-         const result = await requestPromise.post(this._url + this._tokenEndpoint, this._options) as AccessTokenResponse;
-          token.accessToken = result.accessToken;
-          token.refreshToken = result.refreshToken;
-          return token;
-        }catch (e) {
+        try {
+            const result = await requestPromise.post(this._url + AuthEndpoints.TOKEN_ENDPOINT, options) as AccessTokenResponse;
+            token.accessToken = result.accessToken;
+            token.refreshToken = result.refreshToken;
+            return token;
+        } catch (e) {
             throw createError(AuthenticatorError.ACCESS_TOKEN_ERROR, 400);
         }
     }
