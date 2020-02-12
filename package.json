@@ -11,6 +11,7 @@
     "email": "david.sooter@cpars.de"
   },
   "main": "main.js",
+  "types": "./lib/main.d.ts",
   "engines": {
     "node": ">=8.9"
   },
