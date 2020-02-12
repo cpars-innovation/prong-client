@@ -1,0 +1,36 @@
+{
+  "name": "prong-client",
+  "version": "0.0.1",
+  "description": "prong",
+  "keywords": [],
+  "author": {
+    "name": "David Sooter",
+    "email": "david.sooter@cpars.de"
+  },
+  "main": "main.js",
+  "engines": {
+    "node": ">=8.9"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "clean": "clean dist *.tsbuildinfo",
+    "browserify": "browserify -r jwt-decode -r request-promise-native dist/index.js -o dist/prongclient.js",
+    "uglify": "uglifyjs dist/prongclient.js -o dist/prongclient.min.js",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@types/http-errors": "^1.6.3",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/node": "^13.5.1",
+    "@types/request-promise-native": "^1.0.17",
+    "typescript": "^3.7.5",
+    "uglify-es": "^3.3.9"
+  },
+  "dependencies": {
+    "jwt-decode": "^2.2.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8"
+
+  }
+}
