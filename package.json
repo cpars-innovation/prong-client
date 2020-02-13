@@ -1,6 +1,6 @@
 {
   "name": "prong-client",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "prong",
   "keywords": [
     "Prong",
@@ -10,7 +10,7 @@
     "name": "David Sooter",
     "email": "david.sooter@cpars.de"
   },
-  "main": "index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist/**/*"],
   "engines": {
