@@ -1,3 +1,2 @@
-export * from './ProngClientFactory'
-export * from './lib/types'
-
+export * from './lib/ProngClientFactory';
+export * from './lib/types';

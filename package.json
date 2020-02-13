@@ -11,7 +11,8 @@
     "email": "david.sooter@cpars.de"
   },
   "main": "index.js",
-  "types": "./lib/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "files": ["dist/**/*"],
   "engines": {
     "node": ">=8.9"
   },
@@ -25,9 +26,14 @@
   "homepage": "https://github.com/cpars-innovation/prong-client#readme",
   "license": "ISC",
   "scripts": {
+    "prepare" : "npm run build",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags",
     "build": "tsc",
     "build:watch": "tsc -w",
     "clean": "clean dist *.tsbuildinfo",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
     "browserify": "browserify -r jwt-decode -r request-promise-native dist/index.js -o dist/prongclient.js",
     "uglify": "uglifyjs dist/prongclient.js -o dist/prongclient.min.js",
     "start": "node dist/index.js"
@@ -37,6 +43,9 @@
     "@types/jwt-decode": "^2.2.1",
     "@types/node": "^13.5.1",
     "@types/request-promise-native": "^1.0.17",
+    "prettier": "^1.19.1",
+    "tslint": "^6.0.0",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.5",
     "uglify-es": "^3.3.9"
   },

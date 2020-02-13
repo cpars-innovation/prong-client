@@ -1,3 +1,3 @@
 export * from './ErrorMessages';
-export * from './General.constants'
-export * from './Enums'
+export * from './General.constants';
+export * from './Enums';

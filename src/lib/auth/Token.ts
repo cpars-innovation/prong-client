@@ -40,7 +40,7 @@ export class Token {
    * Checks if Token is expired.
    * @param token - A jwt compliant object.
    */
-  private _isExpired(expiryDate: number| undefined) {
+  private _isExpired(expiryDate: number | undefined) {
     const currentTime = new Date().getTime() / 1000;
     return !expiryDate || expiryDate < currentTime;
   }

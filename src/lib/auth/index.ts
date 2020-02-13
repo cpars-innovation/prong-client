@@ -1,2 +1,2 @@
-export * from './Authenticator'
-export * from './Token'
+export * from './Authenticator';
+export * from './Token';

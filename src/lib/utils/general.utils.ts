@@ -3,7 +3,7 @@
  * @param {string} url - The url to validate.
  * @return {boolean} The result of the validation.
  */
-import {ProngError} from "./error";
+import {ProngError} from './error';
 
 export function isValidUrl(url: string): boolean {
   if (url.indexOf('localhost', 0) !== -1) return true;
@@ -12,7 +12,6 @@ export function isValidUrl(url: string): boolean {
   return urlRegex.test(encodedUrl);
 }
 
-
-export function createError(message: string| object, statusCode?: number) {
-    return new Error(new ProngError(message,statusCode).toString());
+export function createError(message: string | object, statusCode?: number) {
+  return new Error(new ProngError(message, statusCode).toString());
 }

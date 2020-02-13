@@ -9,10 +9,10 @@ export type TokenAuthType = {
   code: string;
 } & AccessTokenResponse;
 
-export type  AccessTokenResponse = {
+export type AccessTokenResponse = {
   accessToken: string;
   refreshToken: string;
-}
+};
 
 export type JWTAccess = {
   active: null | boolean;
@@ -32,7 +32,7 @@ export type JWTAccess = {
   modifiedBy: null | string;
   modifiedOn: Date;
   password: null | string;
-  permissions: Array<string>;
+  permissions: string[];
 };
 
 export type JWTCode = {
@@ -46,7 +46,7 @@ export type JWTCode = {
 };
 
 export enum AuthEndpoints {
-  LOGIN_ENDPOINT   = '/auth-api/v1/auth/login',
-  TOKEN_ENDPOINT   = '/auth-api/v1/auth/token',
-  REFRESH_ENDPOINT = '/auth-api/v1/auth/token-refresh'
+  LOGIN_ENDPOINT = '/auth-api/v1/auth/login',
+  TOKEN_ENDPOINT = '/auth-api/v1/auth/token',
+  REFRESH_ENDPOINT = '/auth-api/v1/auth/token-refresh',
 }
